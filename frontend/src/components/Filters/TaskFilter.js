@@ -16,13 +16,13 @@ const TaskFilter = ({ onFilterChange }) => {
 
     return (
         <div className="task-filter">
-            <select value={status} onChange={handleStatusChange}>
+            <select value={status} onChange={handleStatusChange} className="form-select">
                 <option value="">All Statuses</option>
                 <option value="completed">Completed</option>
                 <option value="pending">Pending</option>
                 <option value="in-progress">In Progress</option>
             </select>
-            <select value={category} onChange={handleCategoryChange}>
+            <select value={category} onChange={handleCategoryChange} className="form-select">
                 <option value="">All Categories</option>
                 <option value="work">Work</option>
                 <option value="personal">Personal</option>

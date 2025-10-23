@@ -1,41 +1,15 @@
-import { useState, useContext } from 'react';
-import axios from 'axios';
+import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
-const useAuth = () => {
-    const { setAuth } = useContext(AuthContext);
-    const [error, setError] = useState(null);
-
-    const login = async (email, password) => {
-        try {
-            const response = await axios.post('/api/login', { email, password });
-            setAuth(response.data);
-            setError(null);
-        } catch (err) {
-            setError(err.response.data.message);
-        }
-    };
-
-    const register = async (userData) => {
-        try {
-            const response = await axios.post('/api/register', userData);
-            setAuth(response.data);
-            setError(null);
-        } catch (err) {
-            setError(err.response.data.message);
-        }
-    };
-
-    const logout = async () => {
-        try {
-            await axios.post('/api/logout');
-            setAuth(null);
-        } catch (err) {
-            setError(err.response.data.message);
-        }
-    };
-
-    return { login, register, logout, error };
+// Hook personnalisé pour accéder au contexte d'authentification
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    
+    if (!context) {
+        throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
+    }
+    
+    return context;
 };
 
 export default useAuth;
