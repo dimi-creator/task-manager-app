@@ -17,6 +17,14 @@ class Task extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'status' => 'string',
+    ];
+
+    protected $attributes = [
+        'status' => 'pending',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -1,55 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import TaskItem from './TaskItem';
-import TaskForm from './TaskForm';
+import './TaskList.css';
 
-const TaskList = () => {
-    const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await axios.get('/api/tasks');
-                setTasks(response.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTasks();
-    }, []);
-
-    const handleTaskUpdate = (updatedTask) => {
-        setTasks((prevTasks) =>
-            prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-        );
-    };
-
-    const handleTaskDelete = (taskId) => {
-        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-    };
-
-    if (loading) return <div>Loading tasks...</div>;
-    if (error) return <div>Error: {error}</div>;
+const TaskList = ({ tasks = [], onTaskUpdate, onTaskDelete, loading = false, error = null }) => {
+    if (loading) return <div className="loading">Chargement des tâches...</div>;
+    if (error) return <div className="error">Erreur: {error}</div>;
 
     return (
-        <div>
-            <h2>Your Tasks</h2>
-            <TaskForm onTaskUpdate={handleTaskUpdate} />
-            <ul>
-                {tasks.map((task) => (
-                    <TaskItem
-                        key={task.id}
-                        task={task}
-                        onTaskUpdate={handleTaskUpdate}
-                        onTaskDelete={handleTaskDelete}
-                    />
-                ))}
-            </ul>
+        <div className="task-list">
+            {tasks.length > 0 ? (
+                <ul className="task-list-items">
+                    {tasks.map((task) => (
+                        <li key={task.id} className="task-list-item">
+                            <TaskItem
+                                key={task.id}
+                                task={task}
+                                onEdit={onTaskUpdate}
+                                onDelete={onTaskDelete}
+                                onToggle={onTaskUpdate}
+                            />
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="no-tasks">Aucune tâche à afficher pour le moment.</p>
+            )}
         </div>
     );
 };
